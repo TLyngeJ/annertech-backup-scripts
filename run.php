@@ -44,7 +44,7 @@ foreach ($aliases as $alias_name => $alias) {
   if (substr($alias_name, -3, 3) == 'liv') {
     // Get the project name by exploding the alias_name into an array, remove
     // the last index, and implode the array again, using _ as glue.
-    $project_name = implode('_', array_pop(explode('_', $alias_name)[0]));
+    $project_name = implode('_', array_pop(explode('_', $alias_name)));
     $remote_user = $aliases[$project_name . '_sta']['remote-user'];
     $remote_host = $aliases[$project_name . '_sta']['remote-host'];
     print ("Processing $project_name\n");
