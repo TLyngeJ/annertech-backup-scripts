@@ -47,8 +47,8 @@ foreach ($aliases as $alias_name => $alias) {
     $alias_name_array = explode('_', $alias_name);
     array_pop($alias_name_array);
     $project_name = implode('_', $alias_name_array);
-    $remote_user = $aliases[$project_name . '_sta']['remote-user'];
-    $remote_host = $aliases[$project_name . '_sta']['remote-host'];
+    $remote_sta_user = $aliases[$project_name . '_sta']['remote-user'];
+    $remote_sta_host = $aliases[$project_name . '_sta']['remote-host'];
     print ("Processing $project_name\n");
     // Sync files from the live environment to the staging environment.
     print ("File sync between live and staging environment:\n");
@@ -58,7 +58,7 @@ foreach ($aliases as $alias_name => $alias) {
     shell_exec("vendor/bin/drush @$alias_name sql-dump --gzip > sql_dump/$project_name.sql.gz");
     // Sync files.
     print ("Downloading files folder\n");
-    shell_exec("rsync -rz --size-only $remote_user@$remote_host:/srv/drupal/sites/default/files/ file_dump/$project_name");
+    shell_exec("rsync -rz --size-only $remote_sta_user@$remote_sta_host:/srv/drupal/sites/default/files/ file_dump/$project_name");
     print ("Project backup complete\n\n");
   }
 }
