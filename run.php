@@ -43,8 +43,8 @@ include_once "aberdeen.aliases.drushrc.php";
 foreach ($aliases as $alias_name => $alias) {
   if (substr($alias_name, -3, 3) == 'liv') {
     $project_name = explode('_', $alias_name)[0];
-    $remote_user = $alias['remote-user'];
-    $remote_host = $alias['remote-host'];
+    $remote_user = $aliases[$project_name . '_sta']['remote-user'];
+    $remote_host = $aliases[$project_name . '_sta']['remote-host'];
     print ("Processing $project_name\n");
     // Sync files from the live environment to the staging environment.
     print ("File sync between live and staging environment:\n");
