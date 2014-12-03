@@ -56,7 +56,7 @@ foreach ($aliases as $alias_name => $alias) {
     // Download the database to this filesystem.
     print ("Downloading database\n");
     shell_exec("vendor/bin/drush @$alias_name sql-dump --gzip > sql_dump/$project_name.sql.gz");
-    // Sync files.
+    // Sync files to local folder.
     print ("Downloading files folder\n");
     shell_exec("rsync -rvz --size-only $remote_sta_user@$remote_sta_host:/srv/drupal/sites/default/files/ file_dump/$project_name");
     print ("Project backup complete\n\n");
