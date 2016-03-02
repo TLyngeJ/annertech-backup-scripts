@@ -27,6 +27,6 @@ echo $projects_total . " will be backed up\n\n";
 
 // Backup sites.
 foreach ($project_ids as $index => $project_id) {
-  echo 'Backing up project ID ' . $project_id . " (site $index of $projects_total\n";
+  echo 'Backing up project ID ' . $project_id . " (site $index of $projects_total)\n";
   exec('./platform backup -q -e master -p ' . $project_id);
 }
