@@ -18,7 +18,7 @@ if (!file_exists('platform')) {
 }
 
 print ("Updating Platform CLI\n");
-fwrite(STDOUT, shell_exec("./platform self-update"));
+fwrite(STDOUT, shell_exec("./platform --yes self-update"));
 
 // Fetch all the available projects.
 exec('./platform project:list --pipe', $project_ids);
