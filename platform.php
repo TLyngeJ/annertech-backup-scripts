@@ -22,9 +22,11 @@ fwrite(STDOUT, shell_exec("./platform --yes self-update"));
 
 // Fetch all the available projects.
 exec('./platform project:list --pipe', $project_ids);
+$projects_total = count($project_ids);
+echo $projects_total . " will be backed up\n\n";
 
 // Backup sites.
-foreach ($project_ids as $project_id) {
-  echo 'Backing up project ID ' . $project_id . "\n";
+foreach ($project_ids as $index => $project_id) {
+  echo 'Backing up project ID ' . $project_id . " (site $index of $projects_total\n";
   exec('./platform backup -e master -p ' . $project_id);
 }
