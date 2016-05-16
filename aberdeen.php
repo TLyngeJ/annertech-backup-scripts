@@ -53,6 +53,14 @@ foreach ($aliases as $alias_name => $alias) {
     // Download the database to this filesystem.
     print ("Downloading database\n");
     shell_exec("vendor/bin/drush @$alias_name sql-dump --gzip > sql_dump/$project_name.sql.gz");
+    // By making sure that the DB dump has a certain size we assume that the
+    // export went well.
+    if (filesize("sql_dump/$project_name.sql.gz") > 5000) {
+      // Rename the DB dump.
+      rename("sql_dump/$project_name.sql.gz", "sql_dump/$project_name" . "_" . date("Y-m-d") . ".sql.gz");
+      // And delete the one from 4 days ago.
+      unlink("sql_dump/$project_name" . "_" . date("Y-m-d", strtotime("-4 day")) . ".sql.gz");
+    }
     // Sync files to local folder.
     print ("Downloading files folder\n");
     shell_exec("rsync -rz --size-only --delete $remote_liv_user@$remote_liv_host:/srv/drupal/sites/default/files/ file_dump/$project_name");
