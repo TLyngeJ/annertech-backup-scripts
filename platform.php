@@ -20,13 +20,31 @@ if (!file_exists('platform')) {
 print ("Updating Platform CLI\n");
 fwrite(STDOUT, shell_exec("./platform --yes self-update"));
 
+// Make sure backup directories exists.
+if (!file_exists('sql_dump')) {
+  mkdir('sql_dump');
+}
+if (!file_exists('file_dump')) {
+  mkdir('file_dump');
+}
+
 // Fetch all the available projects.
 exec('./platform project:list --pipe', $project_ids);
 $projects_total = count($project_ids);
 echo $projects_total . " will be backed up\n\n";
 
-// Backup sites.
 foreach ($project_ids as $index => $project_id) {
-  echo 'Backing up project ID ' . $project_id . " (site $index of $projects_total)\n";
+  // Backup sites remotely.
+  echo "Remote backup of project ID " . $project_id . " (site $index of $projects_total)\n";
   exec('./platform backup -q -e master -p ' . $project_id);
+  echo "Local back up (DB)\n";
+  exec('./platform drush -e master -p ' . $project_id . ' sql-dump --gzip > sql_dump/' . $project_id . '.sql.gz');
+  if (filesize("sql_dump/$project_id.sql.gz") > 5000) {
+    // Rename the DB dump.
+    rename("sql_dump/$project_id.sql.gz", "sql_dump/$project_id" . "_" . date("Y-m-d") . ".sql.gz");
+    // And delete the one from 4 days ago.
+    unlink("sql_dump/$project_id" . "_" . date("Y-m-d", strtotime("-4 day")) . ".sql.gz");
+  }
+  echo "Local back up (files)\n";
+  exec("rsync -rz --size-only --delete $project_id-master@ssh.eu.platform.sh:/app/public/sites/default/files/ file_dump/$project_id");
 }
