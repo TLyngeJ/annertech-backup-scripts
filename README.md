@@ -10,5 +10,3 @@ This will download the files and DB to the machine where the script is executed.
 
 Run ```./platform.php``` to start the backup process for Platform.sh sites. This
 will backup the sites on Platform.sh' servers.
-
-Run ```./update-checker.php``` to check all sites for security updates.
