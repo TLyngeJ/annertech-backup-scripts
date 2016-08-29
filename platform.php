@@ -38,7 +38,7 @@ foreach ($project_ids as $index => $project_id) {
   echo "Remote backup of project ID " . $project_id . " (site $index of $projects_total)\n";
   exec('./platform backup -q -e master -p ' . $project_id);
   echo "Local back up (DB)\n";
-  exec('./platform drush -e master -p ' . $project_id . ' sql-dump --gzip > sql_dump/' . $project_id . '.sql.gz');
+  exec('./platform drush -e master -p ' . $project_id . ' "sql-dump --gzip" > sql_dump/' . $project_id . '.sql.gz');
   if (filesize("sql_dump/$project_id.sql.gz") > 5000) {
     // Rename the DB dump.
     rename("sql_dump/$project_id.sql.gz", "sql_dump/$project_id" . "_" . date("Y-m-d") . ".sql.gz");
